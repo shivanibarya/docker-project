@@ -261,4 +261,5 @@ pipeline {
 •	Real-world DevOps pipeline implementation
 
 8 . Conclusion
+
 This project demonstrates a fully automated DevSecOps CI/CD pipeline integrating code quality, dependency security, container security, and Docker-based deployment. It provides hands-on experience in Jenkins, Docker, SonarQube, and Trivy, following industry best practices.
