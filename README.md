@@ -1,16 +1,23 @@
 Docker Project: 
+
 CI/CD Pipeline with Jenkins, SonarQube, and Trivy
 Project Overview
+
 This project demonstrates the implementation of a complete CI/CD pipeline using Jenkins, Docker, SonarQube, Trivy, and other DevSecOps tools. The pipeline builds, scans, and deploys a sample application (Zomato Project) in a Docker container.
 
 
 Step 1: Launch an EC2 Instance
 
 •	Instance Type: t2.large
+
 •	Operating System: Linux (Amazon Linux 2 / CentOS)
+
 •	Security Groups:
+
 •	8080 for Jenkins
+
 •	9000 for SonarQube
+
 •	3000 for application deployment
 
 
