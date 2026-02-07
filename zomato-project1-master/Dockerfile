@@ -1,23 +1,14 @@
-# Use Node.js 16 slim as the base image
-FROM node:16-slim
+# Use nginx to serve static files
+FROM nginx:alpine
 
-# Set the working directory
-WORKDIR /app
+# Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+# Copy project files to nginx directory
+COPY . /usr/share/nginx/html
 
-# Install dependencies
-RUN npm install
+# Expose port 80
+EXPOSE 80
 
-# Copy the rest of the application code
-COPY . .
-
-# Build the React app
-RUN npm run build
-
-# Expose port 3000 (or the port your app is configured to listen on)
-EXPOSE 3000
-
-# Start your Node.js server (assuming it serves the React app)
-CMD ["npm", "start"]
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
