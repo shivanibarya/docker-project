@@ -1,3 +1,5 @@
+<img width="1400" height="735" alt="image" src="https://github.com/user-attachments/assets/cefaf321-aef8-47c7-b9b1-53b33d432db3" />
+
 Docker Project: 
 
 CI/CD Pipeline with Jenkins, SonarQube, and Trivy
