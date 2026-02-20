@@ -1,0 +1,85 @@
+pipeline {
+agent any
+tools {
+jdk 'jdk'
+nodejs 'nodejs'
+}
+
+environment {
+SCANNER_HOME = tool 'sonar'
+}
+
+stages {
+stage('Clean Workspace') { 
+steps {
+cleanWs()
+}
+}
+
+stage('Checkout Code') { 
+steps {
+git 'https://github.com/shivanibarya/zomato-project1.git'
+}
+}
+
+stage('SonarQube Analysis') { 
+steps {
+withSonarQubeEnv('sonar') { sh """
+${SCANNER_HOME}/bin/sonar-scanner \
+-Dsonar.projectName=zomato \
+-Dsonar.projectKey=zomato """
+} 
+}
+}
+
+stage('Install Dependencies') { 
+steps {
+sh 'npm install'
+}
+}
+
+
+stage('Dependency Check') {
+steps {
+dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit -- disableNodeAudit',
+odcInstallation: 'dp-check'
+dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+}
+}
+
+stage('Docker Build') {
+steps {
+sh 'docker build -t container436/zomato:v1 .'
+}
+}
+
+stage('Trivy FS Scan') { 
+steps {
+sh 'trivy fs . --severity HIGH,CRITICAL --exit-code 0 > trivyfs.txt'
+}
+}
+
+stage('Trivy Image Scan') {
+steps {
+sh 'trivy image container436/zomato:v1 --severity HIGH,CRITICAL'
+}
+}
+
+stage('Docker Push') {
+steps {
+script {
+withDockerRegistry(credentialsId: 'ad4fcd89-3746-4c33-9450-47e0078295fc') { sh 'docker push container436/zomato:v1'
+}
+}
+}
+}
+
+stage('Deploy Container') { 
+steps {
+sh '''
+docker rm -f c1 || true
+docker run -d --name c1 -p 3000:3000 container436/zomato:v1 '''
+}
+}
+}
+}
